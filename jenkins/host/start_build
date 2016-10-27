@@ -45,12 +45,12 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://172.28.40.9:3128
 		container_exec $OSM_BUILD_CONTAINER export no_proxy=localhost,127.0.0.0/8,*.local
 
-		container_exec $OSM_BUILD_CONTAINER echo "http_proxy=http://172.28.40.9:3128" >> /etc/environment
-		container_exec $OSM_BUILD_CONTAINER echo "https_proxy=http://172.28.40.9:3128" >> /etc/environment
-		container_exec $OSM_BUILD_CONTAINER echo "no_proxy=localhost,127.0.0.0/8,*.local" >> /etc/environment
+		container_exec $OSM_BUILD_CONTAINER sudo echo "http_proxy=http://172.28.40.9:3128" >> /etc/environment
+		container_exec $OSM_BUILD_CONTAINER sudo echo "https_proxy=http://172.28.40.9:3128" >> /etc/environment
+		container_exec $OSM_BUILD_CONTAINER sudo echo "no_proxy=localhost,127.0.0.0/8,*.local" >> /etc/environment
 
-		container_exec $OSM_BUILD_CONTAINER echo 'Acquire::http::Proxy "http://172.28.40.9:3128";' >> /etc/apt/apt.conf.d/70debconf
-		container_exec $OSM_BUILD_CONTAINER echo 'Acquire::https::Proxy "http://172.28.40.9:3128";' >>/etc/apt/apt.conf.d/70debconf
+		container_exec $OSM_BUILD_CONTAINER sudo echo 'Acquire::http::Proxy "http://172.28.40.9:3128";' >> /etc/apt/apt.conf.d/70debconf
+		container_exec $OSM_BUILD_CONTAINER sudo echo 'Acquire::https::Proxy "http://172.28.40.9:3128";' >>/etc/apt/apt.conf.d/70debconf
 
 		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 	fi
