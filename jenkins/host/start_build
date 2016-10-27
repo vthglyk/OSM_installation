@@ -42,8 +42,8 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 	else
                 # Proxy Configuration
 		# container_exec $OSM_BUILD_CONTAINER whoami
-		container_exec $OSM_BUILD_CONTAINER export http_proxy=http://172.28.40.9:3128
-		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://172.28.40.9:3128
+		container_exec $OSM_BUILD_CONTAINER export http_proxy=http://icache.intranet.gr:80
+		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://icache.intranet.gr:80
 		container_exec $OSM_BUILD_CONTAINER export no_proxy=localhost,127.0.0.0/8,*.local
 
                 ## This code caused a Permission Denied ERROR
@@ -55,11 +55,11 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 		# container_exec $OSM_BUILD_CONTAINER sudo echo 'Acquire::https::Proxy "http://172.28.40.9:3128";' >>/etc/apt/apt.conf.d/70debconf
 
                 ## This code solved the problem
-                echo 'echo "http_proxy=http://172.28.40.9:3128" >> /etc/environment;
-                      echo "https_proxy=http://172.28.40.9:3128" >> /etc/environment;
+                echo 'echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment;
+                      echo "https_proxy=http://icache.intranet.gr:80" >> /etc/environment;
                       echo "no_proxy=localhost,127.0.0.0/8,*.local" >> /etc/environment;
-                      echo "Acquire::http::Proxy \"http://172.28.40.9:3128\";" >> /etc/apt/apt.conf.d/70debconf;
-                      echo "Acquire::https::Proxy \"http://172.28.40.9:3128\";" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
+                      echo "Acquire::http::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf;
+                      echo "Acquire::https::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
 
 		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 	fi
