@@ -38,6 +38,8 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 	wait_container_up $OSM_BUILD_CONTAINER
 	RE="fedora|fc[0-9]"
 	if [[ $OSM_BASE_IMAGE =~ $RE ]]; then
+		container_exec $OSM_BUILD_CONTAINER yum -y install git tar make sudo
+	else
                 # Proxy Configuration
 		container_exec $OSM_BUILD_CONTAINER export http_proxy=http://172.28.40.9:3128
 		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://172.28.40.9:3128
@@ -48,10 +50,8 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 		container_exec $OSM_BUILD_CONTAINER echo "no_proxy=localhost,127.0.0.0/8,*.local" | sudo tee -a /etc/environment
 
 		container_exec $OSM_BUILD_CONTAINER echo 'Acquire::http::Proxy "http://172.28.40.9:3128";' | sudo tee -a /etc/apt/apt.conf.d/70debconf
-		container_exec $OSM_BUILD_CONTAINER echo 'Acquire::https::Proxy "http://172.28.40.9:3128";' | sudo tee -a  /etc/apt/apt.conf.d/70debconf
+		container_exec $OSM_BUILD_CONTAINER echo 'Acquire::https::Proxy "http://172.28.40.9:3128";' | sudo tee -a /etc/apt/apt.conf.d/70debconf
 
-		container_exec $OSM_BUILD_CONTAINER yum -y install git tar make sudo
-	else
 		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 	fi
 	if [ ${OSM_USE_LOCAL_DEVOPS:-false} ]; then
