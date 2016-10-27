@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+#   Copyright 2016 Telefónica Investigación y Desarrollo, S.A.U.
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# 
+# Authors:
+#    - Gerardo Garcia - gerardo.garciadeblas@telefonica.com
+# 
+
+HERE=$(realpath $(dirname $0))
+OSM_JENKINS=$(dirname $HERE)
+. $OSM_JENKINS/common/all_funcs
+
+# SET YOU MDG repository name here
+export OSM_MDG=RO
+OSM_load_config
+OSM_git_checkout "$@"
+
+
+INFO "starting build"
+
+INFO "  cleaning .pyc"
+rm -f *.pyc
+INFO "  installing openmano packages and dependencies from current repo (--noclone)"
+./scripts/install-openmano.sh --noclone -q
+INFO "  compiling *.py"
+python -m py_compile *.py   #&&     #uncomment to concatenate commands
+#basic test HERE            #&&     #uncomment to concatenate commands
+
+RC=$?
+INFO "done, RC=$RC"
+exit $RC
+
+
