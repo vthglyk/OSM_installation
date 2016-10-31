@@ -31,11 +31,15 @@ export no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local
 OSM_load_config
 OSM_git_checkout "$@"
 
+apt install npm -y
+npm config set proxy http://icache.intranet.gr:80
+npm config set https-proxy http://icache.intranet.gr:80
+
 trap 'WARNING "INTERRUPT"; exit 1' INT
 
 INFO "starting build"
 make clean || FATAL "make clean failed"
-./BUILD.sh
+sudo -E ./BUILD.sh
 
 RC=$?
 

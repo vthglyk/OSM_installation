@@ -58,6 +58,9 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
                 echo 'echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment;
                       echo "https_proxy=http://icache.intranet.gr:80" >> /etc/environment;
                       echo "no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local" >> /etc/environment;
+                      echo "http_proxy=http://icache.intranet.gr:80" >> .bashrc;
+                      echo "https_proxy=http://icache.intranet.gr:80" >> .bashrc;
+                      echo "no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local" >> .bashrc;
                       echo "Acquire::http::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf;
                       echo "Acquire::https::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
 
