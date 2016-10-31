@@ -24,6 +24,10 @@ OSM_JENKINS=$(dirname $HERE)
 
 # SET YOU MDG repository name here
 export OSM_MDG=SO
+export http_proxy=http://icache.intranet.gr:80
+export https_proxy=http://icache.intranet.gr:80
+export no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local
+
 OSM_load_config
 OSM_git_checkout "$@"
 
