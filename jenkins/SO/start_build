@@ -43,10 +43,15 @@ trap 'WARNING "INTERRUPT"; exit 1' INT
 
 INFO "starting build"
 make clean || FATAL "make clean failed"
-# @vasgl: preserve the environment
-sudo -E ./BUILD.sh
 
-RC=$?
+# @vasgl: preserve the environment and rerun the build if not successful
+RC=1
+while [ $RC -ne 0 ]
+do 
+    sudo -E ./BUILD.sh
+    RC=$?
+done
+
 
 INFO "done, RC=$RC"
 exit $RC
