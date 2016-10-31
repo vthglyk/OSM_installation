@@ -49,7 +49,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
                 ## This code caused a Permission Denied ERROR
 		# container_exec $OSM_BUILD_CONTAINER sudo echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment
 		# container_exec $OSM_BUILD_CONTAINER sudo echo "https_proxy=http://icache.intranet.gr:80" >> /etc/environment
-		# container_exec $OSM_BUILD_CONTAINER sudo echo "no_proxy=localhost,127.0.0.0/8,*.local" >> /etc/environment
+		# container_exec $OSM_BUILD_CONTAINER sudo echo "no_proxy=localhost,127.0.0.0/8,10.251.5.1/24,*.local" >> /etc/environment
 
 		# container_exec $OSM_BUILD_CONTAINER sudo echo 'Acquire::http::Proxy "http://icache.intranet.gr:80";' >> /etc/apt/apt.conf.d/70debconf
 		# container_exec $OSM_BUILD_CONTAINER sudo echo 'Acquire::https::Proxy "http://icache.intranet.gr:80";' >>/etc/apt/apt.conf.d/70debconf
@@ -57,7 +57,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
                 ## This code solved the problem
                 echo 'echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment;
                       echo "https_proxy=http://icache.intranet.gr:80" >> /etc/environment;
-                      echo "no_proxy=localhost,127.0.0.0/8,*.local" >> /etc/environment;
+                      echo "no_proxy=localhost,127.0.0.0/8,10.251.5.1/24,*.local" >> /etc/environment;
                       echo "Acquire::http::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf;
                       echo "Acquire::https::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
 
