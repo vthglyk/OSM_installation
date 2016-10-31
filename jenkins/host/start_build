@@ -61,7 +61,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
                       echo "Acquire::http::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf;
                       echo "Acquire::https::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
 
-		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
+		container_exec $OSM_BUILD_CONTAINER git config --global https.proxy http://icache.intranet.gr:80
 		container_exec $OSM_BUILD_CONTAINER git config --global http.proxy http://icache.intranet.gr:80
 		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 	fi
