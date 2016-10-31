@@ -24,6 +24,7 @@ OSM_JENKINS=$(dirname $HERE)
 
 # SET YOU MDG repository name here
 export OSM_MDG=SO
+# @vasgl: export proxy settings
 export http_proxy=http://icache.intranet.gr:80
 export https_proxy=http://icache.intranet.gr:80
 export no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local
@@ -31,6 +32,7 @@ export no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local
 OSM_load_config
 OSM_git_checkout "$@"
 
+# @vasgl: Install and configure npm preemptively
 apt install npm -y
 npm set strict-ssl false
 npm config set registry http://registry.npmjs.org/
@@ -41,6 +43,7 @@ trap 'WARNING "INTERRUPT"; exit 1' INT
 
 INFO "starting build"
 make clean || FATAL "make clean failed"
+# @vasgl: preserve the environment
 sudo -E ./BUILD.sh
 
 RC=$?

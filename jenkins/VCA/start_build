@@ -47,11 +47,12 @@ EOF
 
 systemctl enable lxd-bridge
 systemctl start lxd-bridge
-# Added sudo -E to preserve the environment
+# @vasgl: Added sudo -E to preserve the environment
 sudo -E lxc image copy ubuntu:16.04 local: --alias ubuntu-xenial
 sudo -E add-apt-repository -y ppa:juju/devel
 apt update
 apt install -y juju
+# @vasgl: Added sudo -E to preserve the environment
 sudo -E juju bootstrap localhost osm
 
 RC=0

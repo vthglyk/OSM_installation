@@ -40,7 +40,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 	if [[ $OSM_BASE_IMAGE =~ $RE ]]; then
 		container_exec $OSM_BUILD_CONTAINER yum -y install git tar make sudo
 	else
-                # Proxy Configuration
+                # @vasgl: Proxy Configuration
 		# container_exec $OSM_BUILD_CONTAINER whoami
 		container_exec $OSM_BUILD_CONTAINER export http_proxy=http://icache.intranet.gr:80
 		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://icache.intranet.gr:80
