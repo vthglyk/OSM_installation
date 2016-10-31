@@ -44,7 +44,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 		# container_exec $OSM_BUILD_CONTAINER whoami
 		container_exec $OSM_BUILD_CONTAINER export http_proxy=http://icache.intranet.gr:80
 		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://icache.intranet.gr:80
-		container_exec $OSM_BUILD_CONTAINER export no_proxy=localhost,127.0.0.0/8,*.local
+		container_exec $OSM_BUILD_CONTAINER export no_proxy=localhost,127.0.0.0/8,10.251.5.1/24,*.local
 
                 ## This code caused a Permission Denied ERROR
 		# container_exec $OSM_BUILD_CONTAINER sudo echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment
@@ -63,6 +63,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 
 		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 		container_exec $OSM_BUILD_CONTAINER git config --global http.proxy http://icache.intranet.gr:80
+		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 	fi
 	if [ ${OSM_USE_LOCAL_DEVOPS:-false} ]; then
 		container_push_devops $OSM_BUILD_CONTAINER

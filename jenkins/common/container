@@ -65,7 +65,7 @@ wait_container_up() {
 	RE="1 received"
 	while [ $ct -lt 60 ]; do
 		let ct=ct+1
-		output=$(container_exec_stderr "$1" ping -c 1 146.124.2.114)
+		output=$(container_exec_stderr "$1" ping -c 1 icache.intranet.gr)
 		if [[ $output =~ $RE ]]; then	
 			DEBUG "$1 is up"
 			return

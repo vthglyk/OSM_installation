@@ -22,3 +22,10 @@ subdirectories:
     installers -- scripts to be executed to install OSM from source, builds or packages
                see installers/README for more
 
+
+
+## Proxy Configuration
+
+lxc config set core.proxy_https [proxy]
+lxc config set core.proxy_https [proxy]
+lxc config set core.proxy_ignore_hosts [hosts]
