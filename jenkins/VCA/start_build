@@ -52,7 +52,7 @@ sudo -E lxc image copy ubuntu:16.04 local: --alias ubuntu-xenial
 sudo -E add-apt-repository -y ppa:juju/devel
 apt update
 apt install -y juju
-juju bootstrap localhost osm
+sudo -E juju bootstrap localhost osm
 
 RC=0
 
