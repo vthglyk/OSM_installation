@@ -52,8 +52,6 @@ LXD_IPV6_NAT="false"
 LXD_IPV6_PROXY="false"
 EOF
 
-export NO_PROXY=$NO_PROXY,$LXD_IPV4_ADDR
-
 systemctl enable lxd-bridge
 systemctl start lxd-bridge
 # @vasgl: Added sudo -E to preserve the environment
