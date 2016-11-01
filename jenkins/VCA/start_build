@@ -20,9 +20,9 @@ HERE=$(realpath $(dirname $0))
 OSM_JENKINS=$(dirname $HERE)
 . $OSM_JENKINS/common/all_funcs
 
-export HTTP_PROXY=$4
-export HTTPS_PROXY=$5
-export NO_PROXY=$6
+export HTTP_PROXY=$3
+export HTTPS_PROXY=$4
+export NO_PROXY=$5
 
 INFO "installing packages"
 apt update

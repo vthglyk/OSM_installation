@@ -25,9 +25,9 @@ OSM_JENKINS=$(dirname $HERE)
 # SET YOU MDG repository name here
 export OSM_MDG=SO
 # @vasgl: export proxy settings
-export HTTP_PROXY=$4
-export HTTPS_PROXY=$5
-export NO_PROXY=$6
+export HTTP_PROXY=$3
+export HTTPS_PROXY=$4
+export NO_PROXY=$5
 
 OSM_load_config
 OSM_git_checkout "$@"
