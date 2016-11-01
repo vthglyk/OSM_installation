@@ -28,9 +28,9 @@ INFO "installing packages"
 apt update
 lxd init --auto
 lxd waitready
-lxc config set core.proxy_http $HTTP_PROXY
-lxc config set core.proxy_https $HTTPS_PROXY
-lxc config set core.proxy_ignore_hosts $NO_PROXY
+#lxc config set core.proxy_http $HTTP_PROXY
+#lxc config set core.proxy_https $HTTPS_PROXY
+#lxc config set core.proxy_ignore_hosts $NO_PROXY
 systemctl stop lxd-bridge
 systemctl --system daemon-reload
 cat <<EOF > /etc/default/lxd-bridge
