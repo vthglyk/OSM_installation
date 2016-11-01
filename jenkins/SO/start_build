@@ -25,9 +25,9 @@ OSM_JENKINS=$(dirname $HERE)
 # SET YOU MDG repository name here
 export OSM_MDG=SO
 # @vasgl: export proxy settings
-export http_proxy=http://icache.intranet.gr:80
-export https_proxy=http://icache.intranet.gr:80
-export no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local
+export HTTP_PROXY=$4
+export HTTPS_PROXY=$5
+export NO_PROXY=$6
 
 OSM_load_config
 OSM_git_checkout "$@"
@@ -36,8 +36,8 @@ OSM_git_checkout "$@"
 apt install npm -y
 npm set strict-ssl false
 npm config set registry http://registry.npmjs.org/
-npm config set proxy http://icache.intranet.gr:80
-npm config set https-proxy http://icache.intranet.gr:80
+npm config set proxy $HTTP_PROXY
+npm config set https-proxy $HTTPS_PROXY
 
 trap 'WARNING "INTERRUPT"; exit 1' INT
 

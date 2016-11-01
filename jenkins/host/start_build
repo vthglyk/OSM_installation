@@ -27,6 +27,9 @@ OSM_JENKINS=$(dirname $HERE)
 [ $# -lt 1 ] && FATAL "arg is MDG name"
 
 export OSM_MDG=$1
+export HTTP_PROXY=$4
+export HTTPS_PROXY=$5
+export NO_PROXY=$6
 shift
 OSM_load_config
 
@@ -42,9 +45,9 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 	else
                 # @vasgl: Proxy Configuration
 		# container_exec $OSM_BUILD_CONTAINER whoami
-		container_exec $OSM_BUILD_CONTAINER export http_proxy=http://icache.intranet.gr:80
-		container_exec $OSM_BUILD_CONTAINER export https_proxy=http://icache.intranet.gr:80
-		container_exec $OSM_BUILD_CONTAINER export no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local
+		container_exec $OSM_BUILD_CONTAINER export http_proxy=$HTTP_PROXY
+		container_exec $OSM_BUILD_CONTAINER export https_proxy=$HTTPS_PROXY
+		container_exec $OSM_BUILD_CONTAINER export no_proxy=$NO_PROXY
 
                 ## This code caused a Permission Denied ERROR
 		# container_exec $OSM_BUILD_CONTAINER sudo echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment
@@ -55,17 +58,17 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 		# container_exec $OSM_BUILD_CONTAINER sudo echo 'Acquire::https::Proxy "http://icache.intranet.gr:80";' >>/etc/apt/apt.conf.d/70debconf
 
                 ## This code solved the problem
-                echo 'echo "http_proxy=http://icache.intranet.gr:80" >> /etc/environment;
-                      echo "https_proxy=http://icache.intranet.gr:80" >> /etc/environment;
+                echo "echo "http_proxy=$HTTP_PROXY" >> /etc/environment;
+                      echo "https_proxy=$HTTPS_PROXY0" >> /etc/environment;
                       echo "no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local" >> /etc/environment;
-                      echo "http_proxy=http://icache.intranet.gr:80" >> .bashrc;
-                      echo "https_proxy=http://icache.intranet.gr:80" >> .bashrc;
+                      echo "http_proxy=$HTTP_PROXY" >> .bashrc;
+                      echo "https_proxy=$HTTPS_PROXY" >> .bashrc;
                       echo "no_proxy=localhost,127.0.0.0/8,10.0.0.0/8,*.local" >> .bashrc;
-                      echo "Acquire::http::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf;
-                      echo "Acquire::https::Proxy \"http://icache.intranet.gr:80\";" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
+                      echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf.d/70debconf;
+                      echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf.d/70debconf" | lxc exec $OSM_BUILD_CONTAINER bash
 
-		container_exec $OSM_BUILD_CONTAINER git config --global https.proxy http://icache.intranet.gr:80
-		container_exec $OSM_BUILD_CONTAINER git config --global http.proxy http://icache.intranet.gr:80
+		container_exec $OSM_BUILD_CONTAINER git config --global http.proxy $HTTPS_PROXY
+		container_exec $OSM_BUILD_CONTAINER git config --global https.proxy $HTTP_PROXY
 		container_exec $OSM_BUILD_CONTAINER apt -y install git realpath make sudo 
 	fi
 	if [ ${OSM_USE_LOCAL_DEVOPS:-false} ]; then

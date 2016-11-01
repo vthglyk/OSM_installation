@@ -20,10 +20,17 @@ HERE=$(realpath $(dirname $0))
 OSM_JENKINS=$(dirname $HERE)
 . $OSM_JENKINS/common/all_funcs
 
+export HTTP_PROXY=$4
+export HTTPS_PROXY=$5
+export NO_PROXY=$6
+
 INFO "installing packages"
 apt update
 lxd init --auto
 lxd waitready
+lxc config set core.proxy_http $HTTP_PROXY
+lxc config set core.proxy_https $HTTPS_PROXY
+lxc config set core.proxy_ignore_hosts $NO_PROXY
 systemctl stop lxd-bridge
 systemctl --system daemon-reload
 cat <<EOF > /etc/default/lxd-bridge
@@ -53,7 +60,7 @@ sudo -E add-apt-repository -y ppa:juju/devel
 apt update
 apt install -y juju
 # @vasgl: Added sudo -E to preserve the environment
-sudo -E juju bootstrap localhost osm
+sudo -E juju bootstrap localhost osm --config http-proxy=$HTTP_PROXY --config https-proxy=$HTTPS_PROXY --config no-proxy=$NO_PROXY
 
 RC=0
 
