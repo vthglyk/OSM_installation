@@ -59,27 +59,27 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
 
                 ## This code solved the problem
 
-                echo 'echo "http_proxy='$HTTP_PROXY'" >> /etc/environment;
-                      echo "https_proxy='$HTTPS_PROXY'" >> /etc/environment;
-                      echo "no_proxy='$NO_PROXY'" >> /etc/environment;
-                      echo "HTTP_PROXY='$HTTP_PROXY'" >> /etc/environment;
-                      echo "HTTPS_PROXY='$HTTPS_PROXY'" >> /etc/environment;
-                      echo "NO_PROXY='$NO_PROXY'" >> /etc/environment;
+                echo 'echo "http_proxy=HTTP_PROXY_MOCK" >> /etc/environment;
+                      echo "https_proxy=HTTPS_PROXY_MOCK" >> /etc/environment;
+                      echo "no_proxy=NO_PROXY_MOCK" >> /etc/environment;
+                      echo "HTTP_PROXY=HTTP_PROXY_MOCK" >> /etc/environment;
+                      echo "HTTPS_PROXY=HTTPS_PROXY_MOCK" >> /etc/environment;
+                      echo "NO_PROXY=NO_PROXY_MOCK" >> /etc/environment;
                       echo "export http_proxy='$HTTP_PROXY'" >> .bashrc;
                       echo "export https_proxy='$HTTPS_PROXY'" >> .bashrc;
                       echo "export no_proxy='$NO_PROXY'" >> .bashrc;
-                      echo "Acquire::http::Proxy '$HTTP_PROXY';" >> /etc/apt/apt.conf.d/70debconf;
-                      echo "Acquire::https::Proxy '$HTTPS_PROXY';" >> /etc/apt/apt.conf.d/70debconf;
-                      echo "Acquire::ftp::Proxy '$HTTP_PROXY';" >> /etc/apt/apt.conf.d/70debconf' | lxc exec RO bash
+                      echo "Acquire::http::Proxy HTTP_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf;
+                      echo "Acquire::https::Proxy HTTPS_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf;
+                      echo "Acquire::ftp::Proxy HTTP_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf' | lxc exec RO bash
 
 
-                container_exec $OSM_BUILD_CONTAINER sed -i 's@'"$http_proxy"'@'\""$http_proxy"\"'@' /etc/environment
-                container_exec $OSM_BUILD_CONTAINER sed -i 's@'"$https_proxy"'@'\""$https_proxy"\"'@' /etc/environment
-                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@'"$no_proxy"'@'\""$no_proxy"\"'@' /etc/environment
+                container_exec $OSM_BUILD_CONTAINER sed -i 's@HTTP_PROXY_MOCK@'\""$http_proxy"\"'@' /etc/environment
+                container_exec $OSM_BUILD_CONTAINER sed -i 's@HTTPS_PROXY_MOCK@'\""$https_proxy"\"'@' /etc/environment
+                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@NO_PROXY_MOCK@'\""$no_proxy"\"'@' /etc/environment
 
-                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@'"$http_proxy"'@'\""$http_proxy"\"'@' /etc/apt/apt.conf.d/70debconf
-                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@'"$https_proxy"'@'\""$https_proxy"\"'@' /etc/apt/apt.conf.d/70debconf
-                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@'"$no_proxy"'@'\""$no_proxy"\"'@' /etc/apt/apt.conf.d/70debconf
+                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@HTTP_PROXY_MOCK@'\""$http_proxy"\"'@' /etc/apt/apt.conf.d/70debconf
+                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@HTTPS_PROXY_MOCK@'\""$https_proxy"\"'@' /etc/apt/apt.conf.d/70debconf
+                container_exec $OSM_BUILD_CONTAINER -- sed -i 's@NO_PROXY_MOCK@'\""$no_proxy"\"'@' /etc/apt/apt.conf.d/70debconf
 
 		container_exec $OSM_BUILD_CONTAINER git config --global http.proxy $HTTPS_PROXY
 		container_exec $OSM_BUILD_CONTAINER git config --global https.proxy $HTTP_PROXY
