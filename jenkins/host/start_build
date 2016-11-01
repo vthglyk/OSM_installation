@@ -70,7 +70,7 @@ if ! container_exists $OSM_BUILD_CONTAINER; then
                       echo "export no_proxy='$NO_PROXY'" >> .bashrc;
                       echo "Acquire::http::Proxy HTTP_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf;
                       echo "Acquire::https::Proxy HTTPS_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf;
-                      echo "Acquire::ftp::Proxy HTTP_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf' | lxc exec RO bash
+                      echo "Acquire::ftp::Proxy HTTP_PROXY_MOCK;" >> /etc/apt/apt.conf.d/70debconf' | lxc exec $OSM_BUILD_CONTAINER bash
 
 
                 container_exec $OSM_BUILD_CONTAINER sed -i 's@HTTP_PROXY_MOCK@'\""$http_proxy"\"'@' /etc/environment
