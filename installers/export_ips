@@ -23,4 +23,4 @@ export VCA_CONTAINER_IP=`lxc list VCA -c 4|grep eth0 |awk '{print $2}'`
 export SO_CONTAINER_IP=`lxc list SO-ub -c 4|grep eth0 |awk '{print $2}'`
 export RO_CONTAINER_IP=`lxc list RO -c 4|grep eth0 |awk '{print $2}'`
 
-export no_proxy=$no_proxy,$DEFAULT_IP$VCA_CONTAINER_IP,$SO_CONTAINER_IP,$RO_CONTAINER_IP
+export no_proxy=$no_proxy,$DEFAULT_IP,$VCA_CONTAINER_IP,$SO_CONTAINER_IP,$RO_CONTAINER_IP
