@@ -64,15 +64,24 @@ function configure(){
     RO_TENANT_ID=`lxc exec RO -- openmano tenant-create osm |awk '{print $1}'`
 
     echo -e "       Configuring VCA"
-    JUJU_PASSWD=`date +%s | sha256sum | base64 | head -c 32`
+#    JUJU_PASSWD=`date +%s | sha256sum | base64 | head -c 32`
+    JUJU_PASSWD=`echo test | sha256sum | base64 | head -c 32`
     echo -e "$JUJU_PASSWD\n$JUJU_PASSWD" | lxc exec VCA -- juju change-user-password
     JUJU_CONTROLLER_IP=`lxc exec VCA -- lxc list -c 4 |grep eth0 |awk '{print $2}'`
+    export no_proxy=$no_proxy,$JUJU_CONTROLLER_IP
+    echo $no_proxy
 
     echo -e "       Configuring SO"
     sudo route add -host $JUJU_CONTROLLER_IP gw $VCA_CONTAINER_IP
+    echo "Route to Juju Controller added"
     lxc exec SO-ub -- nohup sudo -b -H /usr/rift/rift-shell -r -i /usr/rift -a /usr/rift/.artifacts -- ./demos/launchpad.py --use-xml-mode
-    time=0; step=30; timelength=300; while [ $time -le $timelength ]; do sleep $step; echo -n "."; time=$((time+step)); done; echo
 
+    # Problem: This one never finishes
+    echo "Waiting for SO-ub"
+    time=0; step=30; timelength=300; while [ $time -le $timelength ]; do sleep $step; echo -n "."; time=$((time+step)); done; echo
+    echo "Waiting completed"
+
+    echo "Registering Juju Controller"
     curl -k --request POST \
       --url https://$SO_CONTAINER_IP:8008/api/config/config-agent \
       --header 'accept: application/vnd.yang.data+json' \
@@ -81,6 +90,7 @@ function configure(){
       --header 'content-type: application/vnd.yang.data+json' \
       --data '{"account": [ { "name": "osmjuju", "account-type": "juju", "juju": { "ip-address": "'$JUJU_CONTROLLER_IP'", "port": "17070", "user": "admin", "secret": "'$JUJU_PASSWD'" }  }  ]}'
 
+    echo "Registering RO"
     curl -k --request PUT \
       --url https://$SO_CONTAINER_IP:8008/api/config/resource-orchestrator \
       --header 'accept: application/vnd.yang.data+json' \
@@ -96,6 +106,10 @@ DEVELOP=""
 NAT=""
 RECONFIGURE=""
 TEST_INSTALLER=""
+HTTP_PROXY=http://icache.intranet.gr:80
+HTTPS_PROXY=http://icache.intranet.gr:80
+NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,*.local,10.44.127.1
+
 while getopts ":h-:" o; do
     case "${o}" in
         h)
@@ -134,9 +148,11 @@ echo -e "Checking required packages: git"
 dpkg -l git &>/dev/null || ! echo -e "     git not installed.\nInstalling git requires root privileges" || sudo apt install -y git
 if [ -z "$TEST_INSTALLER" ]; then
     echo -e "\nCloning devops repo temporarily"
-    git clone https://osm.etsi.org/gerrit/osm/devops.git $TEMPDIR
+#    git clone https://osm.etsi.org/gerrit/osm/devops.git $TEMPDIR
+    git clone https://github.com/vthglyk/OSM_installation.git $TEMPDIR
     RC_CLONE=$?
-    DEVOPS_COMMITID="tags/v1.0.1"
+#    DEVOPS_COMMITID="tags/v1.0.1"
+    DEVOPS_COMMITID="master"
     git -C $TEMPDIR checkout $DEVOPS_COMMITID
 fi
 OSM_DEVOPS=$TEMPDIR
@@ -156,10 +172,10 @@ dpkg -l wget curl tar &>/dev/null || ! echo -e "    One or several packages are 
 echo -e "\nCreating the containers and building ..."
 COMMIT_ID="tags/v1.0.1"
 [ -n "$DEVELOP" ] && COMMIT_ID="master"
-$OSM_DEVOPS/jenkins/host/start_build RO checkout $COMMIT_ID
-$OSM_DEVOPS/jenkins/host/start_build VCA
-$OSM_DEVOPS/jenkins/host/start_build SO checkout $COMMIT_ID
-$OSM_DEVOPS/jenkins/host/start_build UI checkout $COMMIT_ID
+$OSM_DEVOPS/jenkins/host/start_build RO checkout $COMMIT_ID $HTTP_PROXY $HTTPS_PROXY $NO_PROXY
+$OSM_DEVOPS/jenkins/host/start_build VCA none    none       $HTTP_PROXY $HTTPS_PROXY $NO_PROXY
+$OSM_DEVOPS/jenkins/host/start_build SO checkout $COMMIT_ID $HTTP_PROXY $HTTPS_PROXY $NO_PROXY
+$OSM_DEVOPS/jenkins/host/start_build UI checkout $COMMIT_ID $HTTP_PROXY $HTTPS_PROXY $NO_PROXY
 
 #Install iptables-persistent and configure NAT rules
 nat
