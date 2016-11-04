@@ -76,7 +76,7 @@ function configure(){
     echo "Route to Juju Controller added"
     lxc exec SO-ub -- nohup sudo -b -H /usr/rift/rift-shell -r -i /usr/rift -a /usr/rift/.artifacts -- ./demos/launchpad.py --use-xml-mode
 
-    # Problem: This one never finishes
+    # Problem: The previous command does not return, so the execution never reaches this point
     echo "Waiting for SO-ub"
     time=0; step=30; timelength=300; while [ $time -le $timelength ]; do sleep $step; echo -n "."; time=$((time+step)); done; echo
     echo "Waiting completed"
