@@ -56,7 +56,7 @@ systemctl enable lxd-bridge
 systemctl start lxd-bridge
 # @vasgl: Added sudo -E to preserve the environment
 sudo -E lxc image copy ubuntu:16.04 local: --alias ubuntu-xenial
-sudo -E add-apt-repository -y ppa:juju/devel
+sudo -E add-apt-repository -y ppa:juju/stable
 apt update
 apt install -y juju
 # @vasgl: Added sudo -E to preserve the environment
